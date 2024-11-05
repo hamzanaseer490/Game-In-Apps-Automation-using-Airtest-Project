@@ -34,10 +34,10 @@ else:
 pytesseract.pytesseract.tesseract_cmd = r'C:\\Users\\Hamza.Naseer\\AppData\\Local\\Programs\\Tesseract-OCR\\tesseract.exe'
 
 # Define different crop regions for the initial and subsequent screenshots
-initial_crop_box = (1900, 35, 2250, 135)  # Crop box for the first screenshot
+initial_crop_box = (1400, 35, 1850, 135)  # Crop box for the first screenshot
 
 # Step 1: Take and process the first screenshot
-first_screenshot_path = r'C:\\Users\\Hamza.Naseer\\Downloads\\Game In-Apps Automation using Airtest Project\\coins_in-apps\\screen_snapshot.png'
+first_screenshot_path = r'C:\\Users\\Hamza.Naseer\\Downloads\\Game In-Apps Automation using Airtest Project\\stars_in-apps\\screen_snapshot.png'
 snapshot(first_screenshot_path)
 
 # Open and enhance the first screenshot
@@ -47,7 +47,7 @@ enhancer = ImageEnhance.Contrast(initial_cropped_image)
 enhanced_initial_image = enhancer.enhance(2.0)
 
 # Save the enhanced first screenshot without using the counter
-enhanced_first_path = r'C:\\Users\\Hamza.Naseer\\Downloads\\Game In-Apps Automation using Airtest Project\\coins_in-apps\\enhanced_first_image.png'
+enhanced_first_path = r'C:\\Users\\Hamza.Naseer\\Downloads\\Game In-Apps Automation using Airtest Project\\stars_in-apps\\enhanced_first_image.png'
 enhanced_initial_image.save(enhanced_first_path)
 
 # Extract numbers from the first enhanced screenshot
@@ -60,9 +60,9 @@ initial_number = int(digits) if digits else 0
 
 print(f"Initial Number: {initial_number}")
 
-# Global variable for running total of coins
+# Global variable for running total of stars
 extracted_numbers_int = initial_number
-expected_coins = extracted_numbers_int + 6500
+expected_stars = extracted_numbers_int + 345
 
 # Initialize a counter for subsequent screenshots
 screenshot_counter = 1
@@ -80,28 +80,28 @@ def convert_to_float(num_str):
         return None  # Return None if conversion fails
 
 # Define a function to perform touch actions, take screenshots, crop, enhance, save, and compare extracted numbers
-def perform_touch_and_update_coins(template_path, coin_increment, variable_to_match):
+def perform_touch_and_update_stars(template_path, coin_increment, variable_to_match):
     global extracted_numbers_int, screenshot_counter
 
     # Take and save a screenshot before each touch action
     screenshot_name = f"in-app{screenshot_counter}.png"
-    screenshot_full_path = os.path.join(r'C:\\Users\\Hamza.Naseer\\Downloads\\Game In-Apps Automation using Airtest Project\\coins_in-apps\\In Apps Images\\', screenshot_name)
+    screenshot_full_path = os.path.join(r'C:\\Users\\Hamza.Naseer\\Downloads\\Game In-Apps Automation using Airtest Project\\stars_in-apps\\In Apps Images\\', screenshot_name)
     snapshot(screenshot_full_path)
 
     # Open and enhance the new screenshot with subsequent_crop_box
     image = Image.open(screenshot_full_path)
     cropped_image = image.crop(subsequent_crop_box).convert('L')  # Convert to grayscale
     contrast_enhancer = ImageEnhance.Contrast(cropped_image)
-    cropped_image = contrast_enhancer.enhance(2.5)
+    cropped_image = contrast_enhancer.enhance(4.0)
     enhanced_image = cropped_image.filter(ImageFilter.SHARPEN)
 
     # Save the enhanced cropped screenshot
-    enhanced_screenshot_path = f'C:\\Users\\Hamza.Naseer\\Downloads\\Game In-Apps Automation using Airtest Project\\coins_in-apps\\Ehanced Images\\enhanced_image_{screenshot_counter}.png'
+    enhanced_screenshot_path = f'C:\\Users\\Hamza.Naseer\\Downloads\\Game In-Apps Automation using Airtest Project\\stars_in-apps\\Ehanced Images\\enhanced_image_{screenshot_counter}.png'
     enhanced_image.save(enhanced_screenshot_path)
     screenshot_counter += 1
 
     # Step 5: Use pytesseract to extract the text from the enhanced cropped image
-    custom_config = r'--psm 6 -c tessedit_char_whitelist="0123456789,."'
+    custom_config = r'--psm 6 -c tessedit_char_whitelist="0123456789,"'
     extracted_text = pytesseract.image_to_string(enhanced_image, config=custom_config)
 
     print(f"Extracted Text: '{extracted_text}'")
@@ -187,77 +187,79 @@ def compare_extracted_values(screenshot_counter, extracted_quantity, extracted_p
     results.append(result_entry)
 
 # Start performing actions with screenshots, cropping, and number extraction/comparisons
-touch(Template(r"tpl1729768161494.png", record_pos=(0.468, -0.201), resolution=(2340, 1080)))
+
+touch(Template(r"tpl1730784065379.png", record_pos=(0.258, -0.202), resolution=(2340, 1080)))
+
 sleep(2)
 
-if not exists(Template(r"tpl1729682994210.png", record_pos=(-0.0, -0.003), resolution=(2560, 1600))):
+if not exists(Template(r"tpl1730784087753.png", record_pos=(-0.024, 0.032), resolution=(2340, 1080))):
     # Alternative actions if the first condition is not met
     print("Coins VGP detected. Performing it.")
     touch(Template(r"tpl1729599219507.png", resolution=(2560, 1600)))
     sleep(6)
-    perform_touch_and_update_coins(r"tpl1729599241291.png", 2500, (2500, 2300.00))
+    perform_touch_and_update_stars(r"tpl1729599241291.png", 150, (150, 2300.00))
     sleep(6)
 
     touch(Template(r"tpl1729599963378.png", resolution=(2560, 1600)))
     sleep(6)
-    perform_touch_and_update_coins(r"tpl1729599986214.png", 150, (150, 280.00))
+    perform_touch_and_update_stars(r"tpl1729599986214.png", 5, (5, 280.00))
 
     sleep(6)
     touch(Template(r"tpl1729600787446.png", resolution=(2560, 1600)))
     sleep(6)
-    perform_touch_and_update_coins(r"tpl1729600704210.png", 350, (350, 550.00))
+    perform_touch_and_update_stars(r"tpl1729600704210.png", 15, (15, 550.00))
 
     sleep(6)
     touch(Template(r"tpl1729600775153.png", resolution=(2560, 1600)))
     sleep(6)
-    perform_touch_and_update_coins(r"tpl1729600810661.png", 550, (550, 1100.00))
+    perform_touch_and_update_stars(r"tpl1729600810661.png", 30, (30, 1100.00))
 
     sleep(6)
     touch(Template(r"tpl1729601324576.png", resolution=(2560, 1600)))
     sleep(6)
-    perform_touch_and_update_coins(r"tpl1729601355758.png", 950, (950, 1700.00))
+    perform_touch_and_update_stars(r"tpl1729601355758.png", 45, (45, 1700.00))
 
     sleep(6)
     touch(Template(r"tpl1729601468555.png", resolution=(2560, 1600)))
     sleep(6)
-    perform_touch_and_update_coins(r"tpl1729601472369.png", 2000, (2000, 2800.00))
+    perform_touch_and_update_stars(r"tpl1729601472369.png", 100, (100, 2800.00))
 else:
     touch(Template(r"tpl1729599963378.png", resolution=(2560, 1600)))
     sleep(6)
-    perform_touch_and_update_coins(r"tpl1729599986214.png", 150, (150, 280.00))
+    perform_touch_and_update_stars(r"tpl1729599986214.png", 5, (5, 280.00))
     sleep(6)
     touch(Template(r"tpl1729600787446.png", resolution=(2560, 1600)))
     sleep(6)
-    perform_touch_and_update_coins(r"tpl1729600704210.png", 350, (350, 550.00))
+    perform_touch_and_update_stars(r"tpl1729600704210.png", 15, (15, 550.00))
     sleep(6)
     touch(Template(r"tpl1729600775153.png", resolution=(2560, 1600)))
     sleep(6)
-    perform_touch_and_update_coins(r"tpl1729600810661.png", 550, (550, 1100.00))
+    perform_touch_and_update_stars(r"tpl1729600810661.png", 30, (30, 1100.00))
     sleep(6)
     touch(Template(r"tpl1729601324576.png", resolution=(2560, 1600)))
     sleep(6)
-    perform_touch_and_update_coins(r"tpl1729601355758.png", 950, (950, 1700.00))
+    perform_touch_and_update_stars(r"tpl1729601355758.png", 45, (45, 1700.00))
     sleep(6)
     touch(Template(r"tpl1729601468555.png", resolution=(2560, 1600)))
     sleep(6)
-    perform_touch_and_update_coins(r"tpl1729601472369.png", 2000, (2000, 2800.00))
+    perform_touch_and_update_stars(r"tpl1729601472369.png", 100, (100, 2800.00))
 
 
 
     touch(Template(r"tpl1729600096931.png", resolution=(2560, 1600)))
     sleep(6)
 
-    touch(Template(r"tpl1729768161494.png", record_pos=(0.468, -0.201), resolution=(2340, 1080)))
+    touch(Template(r"tpl1730784065379.png", record_pos=(0.258, -0.202), resolution=(2340, 1080)))
     sleep(6)
     touch(Template(r"tpl1729599219507.png", resolution=(2560, 1600)))
     sleep(6)
-    perform_touch_and_update_coins(r"tpl1729599241291.png", 2500, (2500, 2300.00))
+    perform_touch_and_update_stars(r"tpl1729599241291.png", 150, (150, 2300.00))
     
 
 # Print results
 print("\n\n===================================================================================\n")
 print("Total Number of Coins:", extracted_numbers_int)
-assert_equal(expected_coins, extracted_numbers_int, "Please fill in the test point.")
+assert_equal(expected_stars, extracted_numbers_int, "Please fill in the test point.")
 print("\n\n===================================================================================\n")
 
 
@@ -283,6 +285,7 @@ def print_report():
 
 # After all comparisons, call the report function
 print_report()
+
 
 
 

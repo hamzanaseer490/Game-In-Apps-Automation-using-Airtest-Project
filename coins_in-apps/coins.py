@@ -5,7 +5,6 @@ import os
 import re
 from airtest.core.api import G
 
-
 # Connect to the Android device (or iOS if applicable)
 connect_device("Android:///")  # Adjust as necessary for iOS
 mobile_device = True
@@ -19,18 +18,17 @@ if G.DEVICE:
     if width >= 1200 and height >= 800:  # Adjust based on typical tablet resolutions
         print("The device is a tablet.")
         mobile_device = False
-        print(f"The device is a TABLET & varable is '{mobile_device}'")
+        print(f"The device is a TABLET & variable is '{mobile_device}'")
         subsequent_crop_box = (600, 345, 1882, 450)  # Crop box for all other screenshots
         print(f"Using crop box of TABLET '{subsequent_crop_box}'")
     else:
         print("The device is a mobile phone.")
         mobile_device = True
-        print(f"The device is a MOBILE & varable is '{mobile_device}'")
+        print(f"The device is a MOBILE & variable is '{mobile_device}'")
         subsequent_crop_box = (50, 1345, 1050, 1600)  # Crop box for all other screenshots
         print(f"Using crop box of MOBILE '{subsequent_crop_box}'")
 else:
     print("No device connected.")
-
 
 # Set the path to the Tesseract executable
 pytesseract.pytesseract.tesseract_cmd = r'C:\\Users\\Hamza.Naseer\\AppData\\Local\\Programs\\Tesseract-OCR\\tesseract.exe'
@@ -39,7 +37,7 @@ pytesseract.pytesseract.tesseract_cmd = r'C:\\Users\\Hamza.Naseer\\AppData\\Loca
 initial_crop_box = (1900, 35, 2250, 135)  # Crop box for the first screenshot
 
 # Step 1: Take and process the first screenshot
-first_screenshot_path = r'C:\\Users\Hamza.Naseer\\Downloads\\Game In-Apps Automation using Airtest Project\\coins_in-apps\\screen_snapshot.png'
+first_screenshot_path = r'C:\\Users\\Hamza.Naseer\\Downloads\\Game In-Apps Automation using Airtest Project\\coins_in-apps\\screen_snapshot.png'
 snapshot(first_screenshot_path)
 
 # Open and enhance the first screenshot
@@ -49,7 +47,7 @@ enhancer = ImageEnhance.Contrast(initial_cropped_image)
 enhanced_initial_image = enhancer.enhance(2.0)
 
 # Save the enhanced first screenshot without using the counter
-enhanced_first_path = r'C:\\Users\Hamza.Naseer\\Downloads\\Game In-Apps Automation using Airtest Project\\coins_in-apps\\enhanced_first_image.png'
+enhanced_first_path = r'C:\\Users\\Hamza.Naseer\\Downloads\\Game In-Apps Automation using Airtest Project\\coins_in-apps\\enhanced_first_image.png'
 enhanced_initial_image.save(enhanced_first_path)
 
 # Extract numbers from the first enhanced screenshot
@@ -69,6 +67,9 @@ expected_coins = extracted_numbers_int + 6500
 # Initialize a counter for subsequent screenshots
 screenshot_counter = 1
 
+# Initialize a list to hold results of comparisons
+results = []
+
 # Function to convert extracted number to a float for comparison
 def convert_to_float(num_str):
     if num_str is None:
@@ -84,7 +85,7 @@ def perform_touch_and_update_coins(template_path, coin_increment, variable_to_ma
 
     # Take and save a screenshot before each touch action
     screenshot_name = f"in-app{screenshot_counter}.png"
-    screenshot_full_path = os.path.join(r'C:\\Users\Hamza.Naseer\\Downloads\\Game In-Apps Automation using Airtest Project\\coins_in-apps\\In Apps Images\\', screenshot_name)
+    screenshot_full_path = os.path.join(r'C:\\Users\\Hamza.Naseer\\Downloads\\Game In-Apps Automation using Airtest Project\\coins_in-apps\\In Apps Images\\', screenshot_name)
     snapshot(screenshot_full_path)
 
     # Open and enhance the new screenshot with subsequent_crop_box
@@ -95,7 +96,7 @@ def perform_touch_and_update_coins(template_path, coin_increment, variable_to_ma
     enhanced_image = cropped_image.filter(ImageFilter.SHARPEN)
 
     # Save the enhanced cropped screenshot
-    enhanced_screenshot_path = f'C:\\Users\Hamza.Naseer\\Downloads\\Game In-Apps Automation using Airtest Project\\coins_in-apps\\Ehanced Images\\enhanced_image_{screenshot_counter}.png'
+    enhanced_screenshot_path = f'C:\\Users\\Hamza.Naseer\\Downloads\\Game In-Apps Automation using Airtest Project\\coins_in-apps\\Ehanced Images\\enhanced_image_{screenshot_counter}.png'
     enhanced_image.save(enhanced_screenshot_path)
     screenshot_counter += 1
 
@@ -138,6 +139,18 @@ def perform_touch_and_update_coins(template_path, coin_increment, variable_to_ma
 
 # Function to compare extracted values with expected values
 def compare_extracted_values(screenshot_counter, extracted_quantity, extracted_price, variable_quantity, variable_price):
+    global results  # Reference the results list
+    result_entry = {
+        'screenshot_counter': screenshot_counter,
+        'extracted_quantity': extracted_quantity,
+        'extracted_price': extracted_price,
+        'expected_quantity': variable_quantity,
+        'expected_price': variable_price,
+        'quantity_match': False,
+        'price_match': False,
+        'status': 'Fail'  # Default status as 'Fail'
+    }
+
     if screenshot_counter > 0:  # Skip comparison for the very first call
         extracted_quantity_float = convert_to_float(extracted_quantity)
         extracted_price_float = convert_to_float(extracted_price)
@@ -148,6 +161,7 @@ def compare_extracted_values(screenshot_counter, extracted_quantity, extracted_p
         if extracted_quantity_float is not None and variable_quantity_float is not None:
             if extracted_quantity_float == variable_quantity_float:
                 print(f"Quantity match found for screenshot {screenshot_counter - 1}: Extracted = {extracted_quantity_float}, Expected = {variable_quantity_float}")
+                result_entry['quantity_match'] = True  # Update the result entry
             else:
                 print(f"Quantity mismatch for screenshot {screenshot_counter - 1}: Extracted = {extracted_quantity_float}, Expected = {variable_quantity_float}")
 
@@ -156,14 +170,21 @@ def compare_extracted_values(screenshot_counter, extracted_quantity, extracted_p
             if extracted_price_float is not None:
                 if extracted_price_float == variable_price_float:
                     print(f"Price match found for screenshot {screenshot_counter - 1}: Extracted = {extracted_price_float}, Expected = {variable_price_float}")
+                    result_entry['price_match'] = True  # Update the result entry
                 else:
                     print(f"Price mismatch for screenshot {screenshot_counter - 1}: Extracted = {extracted_price_float}, Expected = {variable_price_float}")
             else:
                 print(f"No price extracted for screenshot {screenshot_counter - 1}, expected price was {variable_price_float}")
+
+        # Set status to 'Pass' if both quantity and price match
+        if result_entry['quantity_match'] and result_entry['price_match']:
+            result_entry['status'] = 'Pass'
+
     else:
         print(f"Skipping comparison for the first screenshot: Quantity = {extracted_quantity}, Price = {extracted_price}")
-        
-        
+
+    # Append the result entry to the results list
+    results.append(result_entry)
 
 # Start performing actions with screenshots, cropping, and number extraction/comparisons
 touch(Template(r"tpl1729768161494.png", record_pos=(0.468, -0.201), resolution=(2340, 1080)))
@@ -240,3 +261,25 @@ assert_equal(expected_coins, extracted_numbers_int, "Please fill in the test poi
 print("\n\n===================================================================================\n")
 
 
+def print_report():
+    total_entries = len(results)
+    passed_count = sum(1 for result in results if result['status'] == 'Pass')
+    failed_count = total_entries - passed_count
+
+    print("\nIn-App Purchase Comparison Report")
+    print("=" * 30)
+    print(f"Total comparisons: {total_entries}")
+    print(f"Passed: {passed_count}")
+    print(f"Failed: {failed_count}\n")
+    print("Detailed Results:")
+    print("-" * 30)
+    
+    for result in results:
+        print(f"Screenshot {result['screenshot_counter']}:")
+        print(f"  Extracted Quantity: {result['extracted_quantity']} | Expected Quantity: {result['expected_quantity']} | Match: {result['quantity_match']}")
+        print(f"  Extracted Price: {result['extracted_price']} | Expected Price: {result['expected_price']} | Match: {result['price_match']}")
+        print(f"  Status: {result['status']}")
+        print("-" * 30)
+
+# After all comparisons, call the report function
+print_report()

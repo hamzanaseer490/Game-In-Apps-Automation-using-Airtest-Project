@@ -25,7 +25,7 @@ if G.DEVICE:
         print("The device is a mobile phone.")
         mobile_device = True
         print(f"The device is a MOBILE & variable is '{mobile_device}'")
-        subsequent_crop_box = (50, 1345, 1050, 1600)  # Crop box for all other screenshots
+        subsequent_crop_box = (50, 1435, 1050, 1670)  # Crop box for all other screenshots
         print(f"Using crop box of MOBILE '{subsequent_crop_box}'")
 else:
     print("No device connected.")
@@ -34,7 +34,7 @@ else:
 pytesseract.pytesseract.tesseract_cmd = r'C:\\Users\\Hamza.Naseer\\AppData\\Local\\Programs\\Tesseract-OCR\\tesseract.exe'
 
 # Define different crop regions for the initial and subsequent screenshots
-initial_crop_box = (1400, 35, 1850, 135)  # Crop box for the first screenshot
+initial_crop_box = (1400, 35, 1950, 135)  # Crop box for the first screenshot
 
 # Step 1: Take and process the first screenshot
 first_screenshot_path = r'C:\\Users\\Hamza.Naseer\\Downloads\\Game In-Apps Automation using Airtest Project\\stars_in-apps\\screen_snapshot.png'
@@ -80,6 +80,7 @@ def convert_to_float(num_str):
         return None  # Return None if conversion fails
 
 # Define a function to perform touch actions, take screenshots, crop, enhance, save, and compare extracted numbers
+
 def perform_touch_and_update_stars(template_path, coin_increment, variable_to_match):
     global extracted_numbers_int, screenshot_counter
 
@@ -92,20 +93,19 @@ def perform_touch_and_update_stars(template_path, coin_increment, variable_to_ma
     image = Image.open(screenshot_full_path)
     cropped_image = image.crop(subsequent_crop_box).convert('L')  # Convert to grayscale
     contrast_enhancer = ImageEnhance.Contrast(cropped_image)
-    cropped_image = contrast_enhancer.enhance(4.0)
-    enhanced_image = cropped_image.filter(ImageFilter.SHARPEN)
+    enhanced_image = contrast_enhancer.enhance(2.5).filter(ImageFilter.SHARPEN)
 
     # Save the enhanced cropped screenshot
-    enhanced_screenshot_path = f'C:\\Users\\Hamza.Naseer\\Downloads\\Game In-Apps Automation using Airtest Project\\stars_in-apps\\Ehanced Images\\enhanced_image_{screenshot_counter}.png'
+    enhanced_screenshot_path = os.path.join(r'C:\\Users\Hamza.Naseer\\Downloads\Game In-Apps Automation using Airtest Project\\stars_in-apps\Ehanced Images\\', f"enhanced_image_{screenshot_counter}.png")
     enhanced_image.save(enhanced_screenshot_path)
     screenshot_counter += 1
 
-    # Step 5: Use pytesseract to extract the text from the enhanced cropped image
-    custom_config = r'--psm 6 -c tessedit_char_whitelist="0123456789,"'
+    # Use pytesseract to extract the text from the enhanced cropped image
+    custom_config = r'--psm 6 -c tessedit_char_whitelist="0123456789,."'
     extracted_text = pytesseract.image_to_string(enhanced_image, config=custom_config)
 
     print(f"Extracted Text: '{extracted_text}'")
-    
+
     # Initialize quantity and price as None
     quantity = None
     price = None
@@ -113,29 +113,35 @@ def perform_touch_and_update_stars(template_path, coin_increment, variable_to_ma
     # Extract quantity and price from the text
     numbers = re.findall(r'\d{1,3}(?:,\d{3})*(?:\.\d+)?', extracted_text)  # Matches numbers with commas and decimals
 
-    # Format the output for readability
-    # Step 6: Updated regex pattern to match numbers with or without commas or decimals
-    numbers = re.findall(r'(\d+(?:,\d{3})*(?:\.\d{2})?)', extracted_text)
-        
-    # Ensure we have at least two numbers
+    # Ensure we have at least two numbers for quantity and price
     if len(numbers) >= 2:
-        quantity = numbers[0].replace(',', '')  # Remove commas
-        price = numbers[1].replace(',', '')     # Remove commas for float conversion
-        print(f"Extracted Quantity: {int(quantity)}")
-        print(f"Extracted Price: {float(price):,.2f}")
-    else:
-        print("Insufficient numbers extracted.")
+        # Remove commas and convert the first number to integer for quantity
+        quantity = int(numbers[0].replace(',', ''))
+        
+        # Remove commas and convert the second number to float for price
+        price = float(numbers[1].replace(',', ''))
 
-    # Proceed to compare values
+        # Check if price might be missing decimal by evaluating its range
+        if price >= 1000 and not '.' in numbers[1]:  # If price seems unusually high and lacks a decimal
+            price /= 100
+
+        print(f"Extracted Quantity: {quantity}")
+        print(f"Extracted Price: {price:,.2f}")
+    else:
+        print("Insufficient numbers extracted. Quantity and price could not be determined.")
+        return  # Exit if values aren't sufficient
+
+    # Compare extracted values with expected values
     extracted_quantity = quantity
     extracted_price = price
 
-    # Compare extracted values
     compare_extracted_values(screenshot_counter, extracted_quantity, extracted_price, variable_to_match[0], variable_to_match[1])
-    
+
+    # Perform touch action and increment stars
     touch(Template(template_path, resolution=(2560, 1600)))
     sleep(5)  # Wait for the action to complete
-    extracted_numbers_int += coin_increment 
+    extracted_numbers_int += coin_increment
+
 
 # Function to compare extracted values with expected values
 def compare_extracted_values(screenshot_counter, extracted_quantity, extracted_price, variable_quantity, variable_price):
@@ -197,7 +203,7 @@ if not exists(Template(r"tpl1730784087753.png", record_pos=(-0.024, 0.032), reso
     print("Coins VGP detected. Performing it.")
     touch(Template(r"tpl1729599219507.png", resolution=(2560, 1600)))
     sleep(6)
-    perform_touch_and_update_stars(r"tpl1729599241291.png", 150, (150, 2300.00))
+    perform_touch_and_update_stars(r"tpl1730883540360.png", 150, (150, 2300.00))
     sleep(6)
 
     touch(Template(r"tpl1729599963378.png", resolution=(2560, 1600)))
@@ -253,7 +259,7 @@ else:
     sleep(6)
     touch(Template(r"tpl1729599219507.png", resolution=(2560, 1600)))
     sleep(6)
-    perform_touch_and_update_stars(r"tpl1729599241291.png", 150, (150, 2300.00))
+    perform_touch_and_update_stars(r"tpl1730883540360.png", 150, (150, 2300.00))
     
 
 # Print results

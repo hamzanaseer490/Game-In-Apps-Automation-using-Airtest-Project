@@ -114,7 +114,7 @@ def perform_touch_and_update_coins(template_path, coin_increment, variable_to_ma
     numbers = re.findall(r'\d{1,3}(?:,\d{3})*(?:\.\d+)?', extracted_text)  # Matches numbers with commas and decimals
 
     # Ensure we have at least two numbers for quantity and price
-    if len(numbers) >= 2:
+    if len(numbers) >= 1:
         # Remove commas and convert the first number to integer for quantity
         quantity = int(numbers[0].replace(',', ''))
         # Remove commas and convert the second number to float for price

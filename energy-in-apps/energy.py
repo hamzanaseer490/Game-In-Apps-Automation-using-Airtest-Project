@@ -34,20 +34,20 @@ else:
 pytesseract.pytesseract.tesseract_cmd = r'C:\\Users\\Hamza.Naseer\\AppData\\Local\\Programs\\Tesseract-OCR\\tesseract.exe'
 
 # Define different crop regions for the initial and subsequent screenshots
-initial_crop_box = (1400, 35, 1930, 135)  # Crop box for the first screenshot
+initial_crop_box = (293, 98, 315, 120)  # Crop box for the first screenshot
 
 # Step 1: Take and process the first screenshot
-first_screenshot_path = r'C:\\Users\\Hamza.Naseer\\Downloads\\Game In-Apps Automation using Airtest Project\\stars_in-apps\\screen_snapshot.png'
+first_screenshot_path = r'C:\\Users\\Hamza.Naseer\\Downloads\\Game In-Apps Automation using Airtest Project\\energy-in-apps\\screen_snapshot.png'
 snapshot(first_screenshot_path)
 
 # Open and enhance the first screenshot
 image = Image.open(first_screenshot_path)
 initial_cropped_image = image.crop(initial_crop_box).convert('L')
 enhancer = ImageEnhance.Contrast(initial_cropped_image)
-enhanced_initial_image = enhancer.enhance(2.0)
+enhanced_initial_image = enhancer.enhance(4.0)
 
 # Save the enhanced first screenshot without using the counter
-enhanced_first_path = r'C:\\Users\\Hamza.Naseer\\Downloads\\Game In-Apps Automation using Airtest Project\\stars_in-apps\\enhanced_first_image.png'
+enhanced_first_path = r'C:\\Users\\Hamza.Naseer\\Downloads\\Game In-Apps Automation using Airtest Project\\energy-in-apps\\enhanced_first_image.png'
 enhanced_initial_image.save(enhanced_first_path)
 
 # Extract numbers from the first enhanced screenshot
@@ -60,9 +60,9 @@ initial_number = int(digits) if digits else 0
 
 print(f"Initial Number: {initial_number}")
 
-# Global variable for running total of stars
+# Global variable for running total of energy
 extracted_numbers_int = initial_number
-expected_stars = extracted_numbers_int + 345
+expected_energy = extracted_numbers_int + 345
 
 # Initialize a counter for subsequent screenshots
 screenshot_counter = 1
@@ -81,12 +81,12 @@ def convert_to_float(num_str):
 
 # Define a function to perform touch actions, take screenshots, crop, enhance, save, and compare extracted numbers
 
-def perform_touch_and_update_stars(template_path, coin_increment, variable_to_match):
+def perform_touch_and_update_energy(template_path, coin_increment, variable_to_match):
     global extracted_numbers_int, screenshot_counter
 
     # Take and save a screenshot before each touch action
     screenshot_name = f"in-app{screenshot_counter}.png"
-    screenshot_full_path = os.path.join(r'C:\\Users\\Hamza.Naseer\\Downloads\\Game In-Apps Automation using Airtest Project\\stars_in-apps\\In Apps Images\\', screenshot_name)
+    screenshot_full_path = os.path.join(r'C:\\Users\\Hamza.Naseer\\Downloads\\Game In-Apps Automation using Airtest Project\\energy-in-apps\\In Apps Images\\', screenshot_name)
     snapshot(screenshot_full_path)
 
     # Open and enhance the new screenshot with subsequent_crop_box
@@ -96,7 +96,7 @@ def perform_touch_and_update_stars(template_path, coin_increment, variable_to_ma
     enhanced_image = contrast_enhancer.enhance(2.5).filter(ImageFilter.SHARPEN)
 
     # Save the enhanced cropped screenshot
-    enhanced_screenshot_path = os.path.join(r'C:\\Users\Hamza.Naseer\\Downloads\Game In-Apps Automation using Airtest Project\\stars_in-apps\Ehanced Images\\', f"enhanced_image_{screenshot_counter}.png")
+    enhanced_screenshot_path = os.path.join(r'C:\\Users\\Hamza.Naseer\\Downloads\\Game In-Apps Automation using Airtest Project\\energy-in-apps\\Ehanced Images\\', f"enhanced_image_{screenshot_counter}.png")
     enhanced_image.save(enhanced_screenshot_path)
     screenshot_counter += 1
 
@@ -137,7 +137,7 @@ def perform_touch_and_update_stars(template_path, coin_increment, variable_to_ma
 
     compare_extracted_values(screenshot_counter, extracted_quantity, extracted_price, variable_to_match[0], variable_to_match[1])
 
-    # Perform touch action and increment stars
+    # Perform touch action and increment energy
     touch(Template(template_path, resolution=(2560, 1600)))
     sleep(5)  # Wait for the action to complete
     extracted_numbers_int += coin_increment
@@ -194,78 +194,86 @@ def compare_extracted_values(screenshot_counter, extracted_quantity, extracted_p
 
 # Start performing actions with screenshots, cropping, and number extraction/comparisons
 
-touch(Template(r"tpl1730784065379.png", record_pos=(0.258, -0.202), resolution=(2340, 1080)))
+touch(Template(r"tpl1730895029353.png", record_pos=(-0.209, -0.193), resolution=(2408, 1080)))
+
 
 sleep(2)
 
-if not exists(Template(r"tpl1730784087753.png", record_pos=(-0.024, 0.032), resolution=(2340, 1080))):
-    # Alternative actions if the first condition is not met
-    print("Stars VGP detected. Performing it.")
-    touch(Template(r"tpl1729599219507.png", resolution=(2560, 1600)))
-    sleep(6)
-    perform_touch_and_update_stars(r"tpl1730883540360.png", 150, (150, 2300.00))
+if not exists(Template(r"tpl1730895058343.png", record_pos=(0.015, 0.029), resolution=(2408, 1080))):
+#     # Alternative actions if the first condition is not met
+#     print("Energy VGP detected. Performing it.")
+    touch(Template(r"tpl1730895397611.png", record_pos=(0.278, -0.095), resolution=(2408, 1080)))
+
+#     sleep(6)
+#     perform_touch_and_update_energy(r"tpl1730883540360.png", 150, (150, 2300.00))
     sleep(6)
 
-    touch(Template(r"tpl1729599963378.png", resolution=(2560, 1600)))
+    touch(Template(r"tpl1730895215662.png", record_pos=(0.008, 0.026), resolution=(2408, 1080)))
+    sleep(3)
+#     perform_touch_and_update_energy(r"tpl1729599986214.png", 5, (5, 280.00))
+
+#     sleep(6)
+    touch(Template(r"tpl1730895290815.png", record_pos=(0.207, 0.027), resolution=(2408, 1080)))
+
+    sleep(3)
+#     perform_touch_and_update_energy(r"tpl1729600704210.png", 15, (15, 550.00))
+
+#     sleep(6)
+    touch(Template(r"tpl1730895313225.png", record_pos=(-0.178, 0.173), resolution=(2408, 1080)))
     sleep(6)
-    perform_touch_and_update_stars(r"tpl1729599986214.png", 5, (5, 280.00))
+    perform_touch_and_update_energy(r"tpl1729600810661.png", 2, (2, 150.00))
 
     sleep(6)
-    touch(Template(r"tpl1729600787446.png", resolution=(2560, 1600)))
+    touch(Template(r"tpl1730895483032.png", record_pos=(0.014, 0.173), resolution=(2408, 1080)))
     sleep(6)
-    perform_touch_and_update_stars(r"tpl1729600704210.png", 15, (15, 550.00))
-
+    perform_touch_and_update_energy(r"tpl1729601355758.png", 4, (4, 310.00))
     sleep(6)
-    touch(Template(r"tpl1729600775153.png", resolution=(2560, 1600)))
+    touch(Template(r"tpl1730895503342.png", record_pos=(0.206, 0.174), resolution=(2408, 1080)))
     sleep(6)
-    perform_touch_and_update_stars(r"tpl1729600810661.png", 30, (30, 1100.00))
-
-    sleep(6)
-    touch(Template(r"tpl1729601324576.png", resolution=(2560, 1600)))
-    sleep(6)
-    perform_touch_and_update_stars(r"tpl1729601355758.png", 45, (45, 1700.00))
-
-    sleep(6)
-    touch(Template(r"tpl1729601468555.png", resolution=(2560, 1600)))
-    sleep(6)
-    perform_touch_and_update_stars(r"tpl1729601472369.png", 100, (100, 2800.00))
+    perform_touch_and_update_energy(r"tpl1729601472369.png", 25, (25, 1550.00))
 else:
-    touch(Template(r"tpl1729599963378.png", resolution=(2560, 1600)))
+    
+    touch(Template(r"tpl1730895215662.png", record_pos=(0.008, 0.026), resolution=(2408, 1080)))
     sleep(6)
-    perform_touch_and_update_stars(r"tpl1729599986214.png", 5, (5, 280.00))
-    sleep(6)
-    touch(Template(r"tpl1729600787446.png", resolution=(2560, 1600)))
-    sleep(6)
-    perform_touch_and_update_stars(r"tpl1729600704210.png", 15, (15, 550.00))
-    sleep(6)
-    touch(Template(r"tpl1729600775153.png", resolution=(2560, 1600)))
-    sleep(6)
-    perform_touch_and_update_stars(r"tpl1729600810661.png", 30, (30, 1100.00))
-    sleep(6)
-    touch(Template(r"tpl1729601324576.png", resolution=(2560, 1600)))
-    sleep(6)
-    perform_touch_and_update_stars(r"tpl1729601355758.png", 45, (45, 1700.00))
-    sleep(6)
-    touch(Template(r"tpl1729601468555.png", resolution=(2560, 1600)))
-    sleep(6)
-    perform_touch_and_update_stars(r"tpl1729601472369.png", 100, (100, 2800.00))
+#     perform_touch_and_update_energy(r"tpl1729599986214.png", 5, (5, 280.00))
 
+    sleep(6)
+    touch(Template(r"tpl1730895290815.png", record_pos=(0.207, 0.027), resolution=(2408, 1080)))
 
+    sleep(6)
+#     perform_touch_and_update_energy(r"tpl1729600704210.png", 15, (15, 550.00))
+
+    sleep(6)
+    touch(Template(r"tpl1730895313225.png", record_pos=(-0.178, 0.173), resolution=(2408, 1080)))
+    sleep(6)
+    perform_touch_and_update_energy(r"tpl1729600810661.png", 2, (2, 150.00))
+
+    sleep(6)
+    touch(Template(r"tpl1730895483032.png", record_pos=(0.014, 0.173), resolution=(2408, 1080)))
+    sleep(6)
+    perform_touch_and_update_energy(r"tpl1729601355758.png", 4, (4, 310.00))
+    sleep(6)
+    touch(Template(r"tpl1730895503342.png", record_pos=(0.206, 0.174), resolution=(2408, 1080)))
+    sleep(6)
+    perform_touch_and_update_energy(r"tpl1729601472369.png", 25, (25, 1550.00))
 
     touch(Template(r"tpl1729600096931.png", resolution=(2560, 1600)))
     sleep(6)
-
+    
     touch(Template(r"tpl1730784065379.png", record_pos=(0.258, -0.202), resolution=(2340, 1080)))
     sleep(6)
-    touch(Template(r"tpl1729599219507.png", resolution=(2560, 1600)))
+    touch(Template(r"tpl1730895397611.png", record_pos=(0.278, -0.095), resolution=(2408, 1080)))
     sleep(6)
-    perform_touch_and_update_stars(r"tpl1730883540360.png", 150, (150, 2300.00))
+    touch(Template(r"tpl1730895483032.png", record_pos=(0.014, 0.173), resolution=(2408, 1080)))
+    sleep(6)
+    perform_touch_and_update_energy(r"tpl1729601355758.png", 4, (4, 310.00))
+    sleep(6)
     
 
 # Print results
 print("\n\n===================================================================================\n")
 print("Total Number of Coins:", extracted_numbers_int)
-assert_equal(expected_stars, extracted_numbers_int, "Please fill in the test point.")
+assert_equal(expected_energy, extracted_numbers_int, "Please fill in the test point.")
 print("\n\n===================================================================================\n")
 
 
